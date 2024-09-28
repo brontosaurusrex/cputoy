@@ -13,8 +13,19 @@ print cpu usage in linux with some vertical bars:
 
 ## build
 
-Run the ./build script (Have golang installed).
+Have glang enviroment installed
+
+    go mod init cpu
+    ./build
 
 ## run
 
 ./cpu
+
+## exit
+
+ctrl+c
+
+## Limits
+
+This will only run on Linux and similar enviroments which can provide proper /proc/stat data.

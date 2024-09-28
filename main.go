@@ -1,5 +1,7 @@
 package main
 
+// written by chatGPT in 2024 with some help from brex
+
 import (
 	"fmt"
 	"os"
@@ -118,6 +120,14 @@ func cursorTerminal() {
 	fmt.Print("\033[H") // Move to top-left
 }
 
+func hideCursor() {
+	fmt.Print("\033[?25l") // ANSI escape code to hide the cursor
+}
+
+func showCursor() {
+	fmt.Print("\033[?25h") // ANSI escape code to show the cursor
+}
+
 func main() {
 
 	// Set up channel to listen for Ctrl+C (SIGINT)
@@ -126,6 +136,10 @@ func main() {
 
 	// Clear terminal
 	clearTerminal()
+	// Hide the cursor
+	hideCursor()
+	// Ensure the cursor is shown again on exit
+	defer showCursor()
 
 	go func() {
 		// Start the main loop
