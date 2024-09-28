@@ -1,0 +1,36 @@
+import (
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
+)
+
+func getTerminalWidth() int {
+	// Try to get the COLUMNS environment variable
+	if colsStr := os.Getenv("COLUMNS"); colsStr != "" {
+		if cols, err := strconv.Atoi(colsStr); err == nil {
+			return cols
+		}
+	}
+	return 100 // Fallback to a default width
+}
+---
+
+func getTerminalWidth() (int, error) {
+    // Get the file descriptor for stdout
+    fd := int(os.Stdout.Fd())
+    // Create a variable to hold the terminal window size
+    var ws syscall.WinSize
+    // Use the ioctl syscall to get the terminal size
+    if _, _, err := syscall.Syscall(syscall.SYS_IOCTL, uintptr(fd), uintptr(syscall.TIOCGWINSZ), uintptr(unsafe.Pointer(&ws))); err != 0 {
+        return 0, err
+    }
+    return int(ws.Col), nil
+}
+
+func main() {
+    terminalWidth, err := getTerminalWidth()
+    if err != nil {
+        fmt.Println("Error getting terminal width:", err)
+        terminalWidth = 100 // Fallback to a default width
+    }

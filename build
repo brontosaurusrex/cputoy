@@ -1,0 +1,2 @@
+go get golang.org/x/term
+go build -o cpu main.go
