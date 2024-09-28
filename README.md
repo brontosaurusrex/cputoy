@@ -20,7 +20,7 @@ Have glang enviroment installed
 
 ## run
 
-./cpu
+./cputoy
 
 ## exit
 
