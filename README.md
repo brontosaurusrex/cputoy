@@ -13,10 +13,12 @@ print cpu usage in Linux with some vertical bars:
 
 ## build
 
-Have glang enviroment installed
+Have golang enviroment installed, then:
 
     go mod init cputoy
     ./build
+
+might just work.
 
 ## run
 
