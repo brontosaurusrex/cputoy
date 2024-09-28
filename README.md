@@ -1,6 +1,6 @@
 # cputoy
 
-print cpu usage in linux with some vertical bars:
+print cpu usage in Linux with some vertical bars:
 
     |||||||||||
     |||||
@@ -15,7 +15,7 @@ print cpu usage in linux with some vertical bars:
 
 Have glang enviroment installed
 
-    go mod init cpu
+    go mod init cputoy
     ./build
 
 ## run
