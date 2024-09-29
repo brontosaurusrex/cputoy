@@ -1,0 +1,7 @@
+while true
+do
+    stress -i 12 -t 4
+    sleep 1
+    stress -i 22 -t 4
+    sleep 1
+done
