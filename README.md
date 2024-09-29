@@ -36,5 +36,4 @@ ctrl+c
 
 ## Limits
 
-This will only run on Linux and similar enviroments which can provide proper /proc/stat data.  
-Cputoy was mostly written by chatGPT with some minor help from /me.
+This will only run on Linux and similar enviroments which can provide proper /proc/stat data. Cputoy was mostly written by chatGPT with some minor help from /me.
