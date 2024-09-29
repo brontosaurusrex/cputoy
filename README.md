@@ -24,6 +24,12 @@ might just work.
 
 ./cputoy
 
+## fake cpu stress
+
+    # apt install stress
+    stress -i 12 -c 3
+    # should give you some moving bars
+
 ## exit
 
 ctrl+c

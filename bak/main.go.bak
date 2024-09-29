@@ -1,5 +1,7 @@
 package main
 
+// written by chatGPT in 2024 with some help from brex
+
 import (
 	"fmt"
 	"os"
@@ -8,20 +10,13 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	"golang.org/x/sys/unix"
 )
 
 // Global variable for terminal width
-var terminalWidth int
-
-func getTerminalWidth() int {
-	// Try to get the COLUMNS environment variable
-	if colsStr := os.Getenv("COLUMNS"); colsStr != "" {
-		if cols, err := strconv.Atoi(colsStr); err == nil {
-			return cols
-		}
-	}
-	return 30 // Fallback to a default width
-}
+var width int = 30
+var widthold int = 30
 
 // Struct to hold CPU statistics
 type CPUStat struct {
@@ -96,8 +91,8 @@ func calculateUsage(stat1, stat2 CPUStat) float64 {
 
 // Function to generate a bar with full blocks for CPU usage visualization
 func generateBar(usage float64) string {
-	totalBlocks := terminalWidth // Total width of the terminal
-
+	totalBlocks := width // Total width of the terminal
+	//fmt.Printf("%d", totalBlocks) // debug
 	// Calculate how many full blocks should be filled
 	fullBlocks := int(usage / 100.0 * float64(totalBlocks))
 
@@ -125,16 +120,26 @@ func cursorTerminal() {
 	fmt.Print("\033[H") // Move to top-left
 }
 
+func hideCursor() {
+	fmt.Print("\033[?25l") // ANSI escape code to hide the cursor
+}
+
+func showCursor() {
+	fmt.Print("\033[?25h") // ANSI escape code to show the cursor
+}
+
 func main() {
+
 	// Set up channel to listen for Ctrl+C (SIGINT)
 	sigChannel := make(chan os.Signal, 1)
 	signal.Notify(sigChannel, syscall.SIGINT, syscall.SIGTERM)
 
-	// Get terminal width
-	terminalWidth = getTerminalWidth() // Assign value to the global variable
-
 	// Clear terminal
 	clearTerminal()
+	// Hide the cursor
+	hideCursor()
+	// Ensure the cursor is shown again on exit
+	defer showCursor()
 
 	go func() {
 		// Start the main loop
@@ -143,12 +148,26 @@ func main() {
 			initialStats, err := getCPUStats()
 			if err != nil {
 				fmt.Println("Error reading CPU stats:", err)
-				time.Sleep(1 * time.Second) // Wait a bit before retrying
+				time.Sleep(1200 * time.Millisecond) // Wait a bit before retrying
 				continue
 			}
 
-			// Wait for 100 milliseconds
-			time.Sleep(100 * time.Millisecond)
+			// term width
+			widthold = width
+			ws, err := unix.IoctlGetWinsize(int(os.Stdout.Fd()), unix.TIOCGWINSZ)
+			if err != nil {
+				fmt.Println("Error getting terminal size:", err)
+				return
+			}
+			width = int(ws.Col) // replacing the global variable
+			//fmt.Printf("Terminal width: %d\n", width)
+			//if width is different than previous width, clear the term
+			if width != widthold {
+				clearTerminal()
+			}
+
+			// Wait for N milliseconds
+			time.Sleep(500 * time.Millisecond)
 
 			// Get final CPU stats
 			finalStats, err := getCPUStats()

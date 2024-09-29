@@ -167,7 +167,7 @@ func main() {
 			}
 
 			// Wait for N milliseconds
-			time.Sleep(500 * time.Millisecond)
+			time.Sleep(300 * time.Millisecond)
 
 			// Get final CPU stats
 			finalStats, err := getCPUStats()
